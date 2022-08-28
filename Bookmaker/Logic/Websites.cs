@@ -8,18 +8,15 @@ public class Websites : INotifyPropertyChanged
 {
     #region Events
 
+    public event PropertyChangedEventHandler? PropertyChanged;
     #endregion
 
     #region Fields
 
+    private string _url = "";
     #endregion
 
     #region Properties
-
-    #endregion
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private string _url = "";
     public string HyperLink
     {
         get => _url;
@@ -30,7 +27,11 @@ public class Websites : INotifyPropertyChanged
         }
     }
 
+    #endregion
+
     
+
+
     [NotifyPropertyChangedInvocator]
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

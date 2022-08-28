@@ -5,9 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bookmaker"
         mc:Ignorable="d"
+        xmlns:viewModel="clr-namespace:Bookmaker.ViewModel"
         Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <viewModel:MainWindowViewModel/>
+    </Window.DataContext>
     <Grid>
-        <ListBox x:Name="listBox" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,0,576,0"/>
+        <ListBox x:Name="Bookmarks" ItemsSource="{Binding BookMarks}" HorizontalAlignment="Left" Width="224" />
 
+        <TextBox x:Name="BookmarkDescription" Margin="0,0,10,0" IsReadOnly="False"
+                 Text="{Binding DescriptionText}" Height="296" VerticalAlignment="Top" HorizontalAlignment="Right" Width="550"/>
+        <Grid Margin="0,0,10,0" HorizontalAlignment="Right" Width="550" Height="123" VerticalAlignment="Bottom">
+            <TextBox x:Name="NewBookmark" Margin="118,40,198,43"/>
+            <Button x:Name="AddBookmark" Content="Add" Margin="367,40,120,43"/>
+        </Grid>
     </Grid>
 </Window>

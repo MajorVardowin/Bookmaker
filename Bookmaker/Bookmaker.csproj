@@ -12,4 +12,8 @@
     <Folder Include="ViewModel\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.33.2" />
+  </ItemGroup>
+
 </Project>
