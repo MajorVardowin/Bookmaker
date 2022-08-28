@@ -6,18 +6,31 @@
         xmlns:local="clr-namespace:Bookmaker"
         mc:Ignorable="d"
         xmlns:viewModel="clr-namespace:Bookmaker.ViewModel"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="507" Width="901">
     <Window.DataContext>
         <viewModel:MainWindowViewModel/>
     </Window.DataContext>
-    <Grid>
-        <ListBox x:Name="Bookmarks" ItemsSource="{Binding BookMarks}" HorizontalAlignment="Left" Width="224" />
+    
+    <Grid HorizontalAlignment="Center" Width="800" Height="434" VerticalAlignment="Top" Margin="0,26,0,0">
+        <ListBox x:Name="Bookmarks" ItemsSource="{Binding SavedBookmarks, Mode=OneWay}"
+                 Margin="0,0,576,0" SelectionMode="Single" SelectedItem="{Binding SelectedBookmark}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding }"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
-        <TextBox x:Name="BookmarkDescription" Margin="0,0,10,0" IsReadOnly="False"
-                 Text="{Binding DescriptionText}" Height="296" VerticalAlignment="Top" HorizontalAlignment="Right" Width="550"/>
-        <Grid Margin="0,0,10,0" HorizontalAlignment="Right" Width="550" Height="123" VerticalAlignment="Bottom">
-            <TextBox x:Name="NewBookmark" Margin="118,40,198,43"/>
-            <Button x:Name="AddBookmark" Content="Add" Margin="367,40,120,43"/>
+        <TextBox x:Name="BookmarkDescription" Margin="240,0,10,138" IsReadOnly="False"
+                 Text="{Binding DescriptionText}"/>
+
+        
+        <Grid Margin="240,311,10,0">
+            <TextBox x:Name="NewBookmarkName" Margin="118,10,198,73" Visibility="{Binding AddNewVisibility, Mode=OneWay}"
+                     Text="{Binding Name}"/>
+            <TextBox x:Name="NewBookmarkUrl" Margin="118,73,198,10" Visibility="{Binding AddNewVisibility, Mode=OneWay}"
+                     Text="{Binding Url}"/>
+            <Button x:Name="AddBookmark" Content="{Binding AddOrDelete}" Command="{Binding AddOrDeleteClicked}" Margin="369,42,118,41"/>
         </Grid>
     </Grid>
 </Window>
