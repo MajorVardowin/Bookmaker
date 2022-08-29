@@ -8,8 +8,10 @@ namespace Bookmaker.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public MainWindow()
         {
+            Logger.Info("Start App");
             DataContext = new MainWindowViewModel();
             InitializeComponent();
         }
