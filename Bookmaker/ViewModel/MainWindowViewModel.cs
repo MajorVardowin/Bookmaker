@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Security.Policy;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Bookmaker.Annotations;
 using Bookmaker.Logic;
 using CSharpFunctionalExtensions;
+using static System.Net.WebRequestMethods;
 
 namespace Bookmaker.ViewModel;
 
@@ -19,8 +21,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
         AddBookMark("Google", "https://www.google.com/", "Google main page");
         AddBookMark("test", "tee", "test1");
         AddBookMark("dire", "bier", "test2");
+        Logger.Error(new Exception("test abbruch", new IndexOutOfRangeException("d")), "Test");
     }
     #region Fields
+    private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
     private string _descriptionTest = "";
     private string _addOrDelete = "Add";
@@ -122,12 +126,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
             SavedBookmarks.Add(name);
             BookMarks.Add(name, url);
             Descriptions.Add(name, description);
-            OnPropertyChanged(nameof(BookMarks));
-            OnPropertyChanged(nameof(Descriptions));
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Logger.Error(e, "Failed to add a new bookmark");
             return Result.Failure("Failed to add new bookmark.");
         }
         return Result.Success();
@@ -144,11 +146,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
         {
             //todo check if bookmark already exists
             Descriptions.Add(name, description);
-            OnPropertyChanged(nameof(Descriptions));
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Logger.Error(e, "Failed to add a new bookmark description");
             return Result.Failure("Failed to add new bookmark.");
         }
         return Result.Success();
@@ -168,11 +169,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
             SavedBookmarks.Remove(name);
             BookMarks.Remove(name);
             Descriptions.Remove(name);
-            OnPropertyChanged(nameof(BookMarks));
-            OnPropertyChanged(nameof(Descriptions));
         }
         catch (Exception e)
         {
+            Logger.Error(e, "Failed to delete a bookmark");
             return Result.Failure("No bookmark deleted");
         }
         return Result.Success();
@@ -182,5 +182,47 @@ public class MainWindowViewModel : INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public void DoubleClick(ListBox listBoxObj, MouseButtonEventArgs mouseButtonEventArgs1)
+    {
+        string url = "";
+        try
+        {
+            string item = listBoxObj.SelectedItem.ToString() ?? throw new InvalidOperationException();
+            url = BookMarks[item];
+            if (string.IsNullOrEmpty(url)) throw new Exception("URL is empty");
+        }
+        catch (InvalidOperationException invalid)
+        {
+            Logger.Error(invalid, "double clicked item is null");
+            return;
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, "Failed to open linked URL");
+            return;
+        }
+
+        bool result = Uri.TryCreate(url, UriKind.Absolute, out var uriResult)
+                      && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+        if (!result)
+        {
+            Logger.Error("No valid URL");
+            Uri.TryCreate("https://www.google.de/search?q=" + url, UriKind.Absolute, out uriResult);
+        }
+        Debug.Assert(uriResult != null, nameof(uriResult) + " != null");
+
+        Process myProcess = new();
+        try
+        {
+            myProcess.StartInfo.UseShellExecute = true;
+            myProcess.StartInfo.FileName = uriResult.AbsoluteUri;
+            myProcess.Start();
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, "Failed to open linked URL");
+        }
     }
 }

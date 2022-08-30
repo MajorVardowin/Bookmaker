@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Bookmaker"
         mc:Ignorable="d"
         xmlns:viewModel="clr-namespace:Bookmaker.ViewModel"
         Title="MainWindow" Height="507" Width="901">
@@ -12,7 +11,7 @@
     </Window.DataContext>
     
     <Grid HorizontalAlignment="Center" Width="800" Height="434" VerticalAlignment="Top" Margin="0,26,0,0">
-        <ListBox x:Name="Bookmarks" ItemsSource="{Binding SavedBookmarks, Mode=OneWay}"
+        <ListBox x:Name="Bookmarks" ItemsSource="{Binding SavedBookmarks, Mode=OneWay}" MouseDoubleClick="Bookmarks_OnMouseDoubleClick"
                  Margin="0,0,576,0" SelectionMode="Single" SelectedItem="{Binding SelectedBookmark}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -30,7 +29,8 @@
                      Text="{Binding Name}"/>
             <TextBox x:Name="NewBookmarkUrl" Margin="118,73,198,10" Visibility="{Binding AddNewVisibility, Mode=OneWay}"
                      Text="{Binding Url}"/>
-            <Button x:Name="AddBookmark" Content="{Binding AddOrDelete}" Command="{Binding AddOrDeleteClicked}" Margin="369,42,118,41"/>
+            <Button x:Name="AddBookmark" Content="{Binding AddOrDelete}" Margin="369,42,118,41"
+                    Command="{Binding AddOrDeleteClicked}" CommandParameter=""/>
         </Grid>
     </Grid>
 </Window>
