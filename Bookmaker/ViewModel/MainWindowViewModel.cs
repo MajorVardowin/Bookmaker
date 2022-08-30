@@ -19,8 +19,8 @@ public class MainWindowViewModel : INotifyPropertyChanged
     public MainWindowViewModel()
     {
         AddBookMark("Google", "https://www.google.com/", "Google main page");
-        AddBookMark("test", "tee", "test1");
-        AddBookMark("dire", "bier", "test2");
+        //AddBookMark("test", "tee", "test1");
+        //AddBookMark("dire", "bier", "test2");
         Logger.Error(new Exception("test abbruch", new IndexOutOfRangeException("d")), "Test");
     }
     #region Fields
@@ -32,6 +32,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
     private ICommand _addOrDeleteClicked;
     private ICommand _selectItem;
     private string _seletedBookmark = "Not set";
+    private Visibility _addNewVisibility = Visibility.Visible;
     public event PropertyChangedEventHandler? PropertyChanged;
 
     #endregion
@@ -74,7 +75,15 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
-    public Visibility AddNewVisibility { get; } = Visibility.Visible;
+    public Visibility AddNewVisibility
+    {
+        get => _addNewVisibility;
+        set
+        {
+            _addNewVisibility = value;
+            OnPropertyChanged();
+        }
+    }
 
     public string AddOrDelete
     {
@@ -125,6 +134,9 @@ public class MainWindowViewModel : INotifyPropertyChanged
             if (CheckIfExists(name)) return Result.Failure("Already Exists");
             SavedBookmarks.Add(name);
             BookMarks.Add(name, url);
+
+            // todo GetWebsiteIco.GetIcon(name, url);
+            
             Descriptions.Add(name, description);
         }
         catch (Exception e)

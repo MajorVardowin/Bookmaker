@@ -5,14 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         xmlns:viewModel="clr-namespace:Bookmaker.ViewModel"
-        Title="MainWindow" Height="507" Width="901">
+        Title="MainWindow" Height="539" Width="901"
+        MouseDown="MainWindow_OnMouseDown">
     <Window.DataContext>
         <viewModel:MainWindowViewModel/>
     </Window.DataContext>
-    
-    <Grid HorizontalAlignment="Center" Width="800" Height="434" VerticalAlignment="Top" Margin="0,26,0,0">
-        <ListBox x:Name="Bookmarks" ItemsSource="{Binding SavedBookmarks, Mode=OneWay}" MouseDoubleClick="Bookmarks_OnMouseDoubleClick"
-                 Margin="0,0,576,0" SelectionMode="Single" SelectedItem="{Binding SelectedBookmark}">
+
+    <Grid HorizontalAlignment="Center" Width="882" Height="487" VerticalAlignment="Top" Margin="0,10,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="316*"/>
+            <RowDefinition Height="61*"/>
+            <RowDefinition Height="57*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="236*"/>
+            <ColumnDefinition Width="565*"/>
+        </Grid.ColumnDefinitions>
+
+        <ListBox Grid.Column="0" Grid.RowSpan="2" x:Name="Bookmarks" ItemsSource="{Binding SavedBookmarks, Mode=OneWay}" MouseDoubleClick="Bookmarks_OnMouseDoubleClick"
+                 Margin="10,10,12,0" SelectionMode="Single" SelectedItem="{Binding SelectedBookmark}"
+                 LostFocus="Bookmarks_OnLostFocus" GotFocus="Bookmarks_OnGotFocus" MouseDown="Bookmarks_OnMouseDown">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding }"/>
@@ -20,17 +32,25 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <TextBox x:Name="BookmarkDescription" Margin="240,0,10,138" IsReadOnly="False"
+        <TextBox Grid.Row="0" Grid.Column="1" x:Name="BookmarkDescription" Margin="10,10,10,49" IsReadOnly="False"
                  Text="{Binding DescriptionText}"/>
 
-        
-        <Grid Margin="240,311,10,0">
-            <TextBox x:Name="NewBookmarkName" Margin="118,10,198,73" Visibility="{Binding AddNewVisibility, Mode=OneWay}"
-                     Text="{Binding Name}"/>
-            <TextBox x:Name="NewBookmarkUrl" Margin="118,73,198,10" Visibility="{Binding AddNewVisibility, Mode=OneWay}"
-                     Text="{Binding Url}"/>
-            <Button x:Name="AddBookmark" Content="{Binding AddOrDelete}" Margin="369,42,118,41"
-                    Command="{Binding AddOrDeleteClicked}" CommandParameter=""/>
+
+        <Grid Margin="4,311,10,0" Grid.Column="1" Grid.RowSpan="3" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="433*"/>
+                <ColumnDefinition Width="176*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80*"/>
+                <RowDefinition Height="80*"/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Column="0" Grid.Row="0" x:Name="NewBookmarkName" Margin="119,13,24,18" Visibility="{Binding AddNewVisibility, Mode=OneWay}"
+                     Text="{Binding Name}" Height="40" Width="290" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBox Grid.Column="0" Grid.Row="1" x:Name="NewBookmarkUrl" Margin="119,0,0,0" Visibility="{Binding AddNewVisibility, Mode=OneWay}"
+                     Text="{Binding Url}" Height="40" Width="290" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <Button Grid.Row="1" Grid.Column="1" x:Name="AddBookmark" Content="{Binding AddOrDelete}" Margin="0,17,0,0"
+                    Command="{Binding AddOrDeleteClicked}" CommandParameter="" Height="40" Width="60" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         </Grid>
     </Grid>
 </Window>
