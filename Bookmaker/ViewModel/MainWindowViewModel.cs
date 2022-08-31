@@ -48,6 +48,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
         set
         {
             _seletedBookmark = value;
+            if (value == null)
+            {
+                DescriptionText = "";
+                return;
+            }
             DescriptionText = BookMarks[value];
             OnPropertyChanged();
         }

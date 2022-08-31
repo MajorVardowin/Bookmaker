@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Bookmaker.ViewModel;
 
 namespace Bookmaker.View
@@ -81,14 +82,13 @@ namespace Bookmaker.View
 
         private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            return;
+            if (NoViewModelAttached()) return;
+            Debug.Assert(_viewModel != null, "View model shouldn't be null there!");
+
             // TODO HERE CODE TO MAKE THE ADDING LOGIC VISIBLE
-        
-
-            //And when would you do that? You can attach a handler to the PreviewMouseLeftButtonDown event of the Window, or any other control in your UI.In the handler method, you could do a hit test to see what the item the user clicked on was:
-
-            //HitTestResult hitTestResult =
-            //    VisualTreeHelper.HitTest(controlClickedOn, e.GetPosition(controlClickedOn));
-            //Control controlUnderMouse = hitTestResult.VisualHit.GetParentOfType<Control>();
+            _viewModel.AddNewVisibility = Visibility.Visible;
+            Bookmarks.SelectedItem = null;
             //https://stackoverflow.com/questions/23133527/wpf-listbox-remove-selection-by-clicking-on-blank-space
         }
     }
