@@ -29,7 +29,8 @@ public class MainWindowViewModel : INotifyPropertyChanged
     private string _descriptionTest = "";
     private string _addOrDelete = "Add";
 
-    private ICommand _addOrDeleteClicked;
+    private ICommand _addClicked;
+    private ICommand _deleteClicked;
     private ICommand _selectItem;
     private string _seletedBookmark = "Not set";
     private Visibility _addNewVisibility = Visibility.Visible;
@@ -100,18 +101,19 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
-    public ICommand AddOrDeleteClicked
+    public ICommand AddClicked
+    {
+        get
+        { 
+            return _addClicked ??= new CommandHandler(() => AddBookMark(Name, Url), () => true);
+        }
+    }
+
+    public ICommand DeleteClicked
     {
         get
         {
-            if (AddOrDelete == "Add")
-            {
-                return _addOrDeleteClicked ??= new CommandHandler(() => AddBookMark(Name, Url), () => true);
-            }
-            else
-            {
-                return _addOrDeleteClicked ??= new CommandHandler(() => DeleteBookMark(Name), () => true);
-            }
+            return _deleteClicked ??= new CommandHandler(() => DeleteBookMark(Name), () => true);
         }
     }
 
@@ -178,7 +180,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         if (AddOrDelete == "Delete") AddOrDelete = "Add";
     }
 
-    private Result DeleteBookMark(string name)
+    public Result DeleteBookMark(string name)
     {
         try
         {

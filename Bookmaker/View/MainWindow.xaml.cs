@@ -15,6 +15,7 @@ namespace Bookmaker.View
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly MainWindowViewModel? _viewModel;
+        private bool desx = false;
         public MainWindow()
         {
             Logger.Info("Start App");
@@ -32,7 +33,7 @@ namespace Bookmaker.View
 
         private void Bookmarks_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (NoViewModelAttached()) return;
+            if (NoViewModelAttached() || Bookmarks.SelectedItem == null) return;
             Debug.Assert(_viewModel != null, "View model shouldn't be null there!");
 
             try
@@ -48,29 +49,19 @@ namespace Bookmaker.View
             
         }
         
-        private void Bookmarks_OnLostFocus(object sender, RoutedEventArgs e)
+        private void Description_OnLostFocus(object sender, RoutedEventArgs e)
         {
-            if (NoViewModelAttached()) return;
-            Debug.Assert(_viewModel != null, "View model shouldn't be null there!");
-
-            _viewModel.AddNewVisibility = Visibility.Visible;
+            desx = false;
         }
 
-        private void Bookmarks_OnGotFocus(object sender, RoutedEventArgs e)
+        private void Description_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            if (NoViewModelAttached()) return;
-            Debug.Assert(_viewModel != null, "View model shouldn't be null there!");
-
-            _viewModel.AddNewVisibility = Visibility.Hidden;
+            desx = true;
         }
 
         private void Bookmarks_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (NoViewModelAttached()) return;
-            Debug.Assert(_viewModel != null, "View model shouldn't be null there!");
-            //Logger.Info("I am here");
-
-            _viewModel.AddNewVisibility = Visibility.Visible;
+            
         }
 
         private bool NoViewModelAttached()
@@ -90,6 +81,13 @@ namespace Bookmaker.View
             _viewModel.AddNewVisibility = Visibility.Visible;
             Bookmarks.SelectedItem = null;
             //https://stackoverflow.com/questions/23133527/wpf-listbox-remove-selection-by-clicking-on-blank-space
+        }
+
+        private void DeleteBookmark_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (NoViewModelAttached()) return;
+            _viewModel.DeleteBookMark(Bookmarks.SelectedItem.ToString());
+            Bookmarks.SelectedItem = null;
         }
     }
 }
