@@ -31,6 +31,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
     private ICommand _addClicked;
     private ICommand _deleteClicked;
+    private ICommand _saveDescriptionText;
     private ICommand _selectItem;
     private string _seletedBookmark = "Not set";
     private Visibility _addNewVisibility = Visibility.Visible;
@@ -117,6 +118,14 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    public ICommand SaveDescriptionText
+    {
+        get
+        {
+            return _saveDescriptionText ??= new CommandHandler(() => AddDescription(), () => true);
+        }
+    }
+
     public ICommand SelectItem
     {
         get
@@ -159,12 +168,18 @@ public class MainWindowViewModel : INotifyPropertyChanged
         return SavedBookmarks.Contains(name) || BookMarks.ContainsKey(name);
     }
 
-    public Result AddDescription(string name, string description)
+    public Result AddDescription()
     {
         try
         {
-            //todo check if bookmark already exists
-            Descriptions.Add(name, description);
+            if (BookMarks.ContainsKey(SelectedBookmark))
+            {
+                Descriptions[SelectedBookmark] = DescriptionText;
+            }
+            else
+            {
+                Descriptions.Add(SelectedBookmark, DescriptionText);
+            }
         }
         catch (Exception e)
         {

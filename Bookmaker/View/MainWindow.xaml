@@ -40,7 +40,7 @@
                  GotFocus="Description_OnGotFocus"/>
 
         <Button Grid.Row="0" x:Name="SaveDescription" Grid.Column="1" Content="Button" HorizontalAlignment="Left" Margin="541,277,0,0" 
-                VerticalAlignment="Top" Height="29" Width="70"/>
+                VerticalAlignment="Top" Height="29" Width="70" Command="{Binding SaveDescriptionText}"/>
 
         <Grid x:Name="AddBookmarkGrid" Margin="4,311,10,0" Grid.Column="1" Grid.RowSpan="3" Grid.Row="0">
             <Grid.ColumnDefinitions>
