@@ -61,7 +61,6 @@ namespace Bookmaker.View
 
         private void Bookmarks_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            
         }
 
         private bool NoViewModelAttached()

@@ -28,6 +28,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
     private string _descriptionText = "";
+    private string _descriptionTextVisulized = "";
     private string _addOrDelete = "Add";
 
     private ICommand _addClicked;
@@ -51,7 +52,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         set
         {
             _seletedBookmark = value;
-            GetDescription(value);
+            UpdateDescription();
             OnPropertyChanged();
         }
     }
@@ -69,7 +70,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         set
         {
             _descriptionText = value;
-            AddDescription();
+            //AddDescription();
             OnPropertyChanged();
         }
     }
@@ -114,28 +115,32 @@ public class MainWindowViewModel : INotifyPropertyChanged
     {
         get
         {
+            DescriptionText = DescriptionTextVisulized;
             return _saveDescriptionText ??= new CommandHandler(() => AddDescription(), () => true);
         }
     }
 
-    public ICommand SelectItem
+    public string DescriptionTextVisulized
     {
-        get
+        get => _descriptionTextVisulized;
+        set
         {
-            return _selectItem ??= new CommandHandler(() => UpdateDescription(Name), () => true);
+            _descriptionTextVisulized = value;
+            OnPropertyChanged();
         }
     }
 
-    public string DescriptionTextVisulized { get; set; }
-
-    private void UpdateDescription(string name)
+    private void UpdateDescription()
     {
-        DescriptionTextVisulized = Descriptions[name];
+        GetDescription(SelectedBookmark);
+
+        DescriptionTextVisulized = DescriptionText;
     }
 
+
     #endregion
-    
-    
+
+
     public Result AddBookMark(string name, string url, string description = "")
     {
         try
