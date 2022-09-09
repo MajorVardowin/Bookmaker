@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,7 +27,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
     #region Fields
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    private string _descriptionTest = "";
+    private string _descriptionText = "";
     private string _addOrDelete = "Add";
 
     private ICommand _addClicked;
@@ -50,12 +51,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         set
         {
             _seletedBookmark = value;
-            if (value == null)
-            {
-                DescriptionText = "";
-                return;
-            }
-            DescriptionText = BookMarks[value];
+            GetDescription(value);
             OnPropertyChanged();
         }
     }
@@ -67,17 +63,13 @@ public class MainWindowViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (string.IsNullOrEmpty(SelectedBookmark))
-                return "No description set";
-            if (!Descriptions.ContainsKey(SelectedBookmark))
-                return "No description for " + SelectedBookmark + " set";
-            
-            return Descriptions[SelectedBookmark];
+            return string.IsNullOrEmpty(SelectedBookmark) ? "No description set" : _descriptionText;
         }
 
         set
         {
-            _descriptionTest = value;
+            _descriptionText = value;
+            AddDescription();
             OnPropertyChanged();
         }
     }
@@ -134,9 +126,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    public string DescriptionTextVisulized { get; set; }
+
     private void UpdateDescription(string name)
     {
-        DescriptionText = Descriptions[name];
+        DescriptionTextVisulized = Descriptions[name];
     }
 
     #endregion
@@ -208,6 +202,22 @@ public class MainWindowViewModel : INotifyPropertyChanged
         {
             Logger.Error(e, "Failed to delete a bookmark");
             return Result.Failure("No bookmark deleted");
+        }
+        return Result.Success();
+    }
+
+    private Result GetDescription(string nameOfBookmark)
+    {
+        try
+        {
+            var description = Descriptions[nameOfBookmark];
+            DescriptionText = description;
+        }
+        catch (Exception e)
+        {
+            var errorMsg = $"Failed to get description of {nameOfBookmark} from saved bookmarks.";
+            Logger.Error(e, errorMsg);
+            return Result.Failure(errorMsg);
         }
         return Result.Success();
     }

@@ -36,7 +36,7 @@
                 VerticalAlignment="Center" Width="68" Height="42" Command="{Binding DeleteClicked}" Click="DeleteBookmark_OnClick"/>
 
         <TextBox Grid.Row="0" Grid.Column="1" x:Name="BookmarkDescription" Margin="10,10,10,49" IsReadOnly="False"
-                 Text="{Binding DescriptionText}" LostFocus="Description_OnLostFocus" 
+                 Text="{Binding DescriptionTextVisulized}" LostFocus="Description_OnLostFocus" 
                  GotFocus="Description_OnGotFocus"/>
 
         <Button Grid.Row="0" x:Name="SaveDescription" Grid.Column="1" Content="Button" HorizontalAlignment="Left" Margin="541,277,0,0" 
