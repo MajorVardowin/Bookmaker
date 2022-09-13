@@ -84,9 +84,7 @@ namespace Bookmaker.View
 
         private void DeleteBookmark_OnClick(object sender, RoutedEventArgs e)
         {
-            if (NoViewModelAttached()) return;
-            _viewModel.DeleteBookMark(Bookmarks.SelectedItem.ToString());
-            Bookmarks.SelectedItem = null;
+            
         }
     }
 }

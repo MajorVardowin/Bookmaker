@@ -20,10 +20,9 @@ public class MainWindowViewModel : INotifyPropertyChanged
     public MainWindowViewModel()
     {
         AddBookMark("Google", "https://www.google.com/", "Google main page");
-        //AddBookMark("test", "tee", "test1");
-        //AddBookMark("dire", "bier", "test2");
         Logger.Error(new Exception("test abbruch", new IndexOutOfRangeException("d")), "Test");
     }
+
     #region Fields
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -31,11 +30,12 @@ public class MainWindowViewModel : INotifyPropertyChanged
     private string _descriptionTextVisulized = "";
     private string _addOrDelete = "Add";
 
-    private ICommand _addClicked;
-    private ICommand _deleteClicked;
-    private ICommand _saveDescriptionText;
-    private ICommand _selectItem;
-    private string _seletedBookmark = "Not set";
+    private ICommand? _addClicked;
+    private ICommand? _deleteClicked;
+    private ICommand? _saveDescriptionText;
+    private string _name = "";
+    private string _url = "";
+    private string _seletedBookmark = "";
     private Visibility _addNewVisibility = Visibility.Visible;
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -57,8 +57,25 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
-    public string Name { get; set; }
-    public string Url { get; set; }
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            _name = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string Url 
+    {
+        get => _url;
+        set
+        {
+            _url = value;
+            OnPropertyChanged();
+        }
+    }
 
     public string DescriptionText
     {
@@ -107,7 +124,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
     {
         get
         {
-            return _deleteClicked ??= new CommandHandler(() => DeleteBookMark(Name), () => true);
+            return _deleteClicked ??= new CommandHandler(() => DeleteBookMark(SelectedBookmark), () => true);
         }
     }
 
@@ -115,7 +132,6 @@ public class MainWindowViewModel : INotifyPropertyChanged
     {
         get
         {
-            DescriptionText = DescriptionTextVisulized;
             return _saveDescriptionText ??= new CommandHandler(() => AddDescription(), () => true);
         }
     }
@@ -141,8 +157,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
     #endregion
 
 
-    public Result AddBookMark(string name, string url, string description = "")
+    public Result AddBookMark(string name, string url, string description = "Not set")
     {
+        if (string.IsNullOrEmpty(name)) return Result.Failure("Name null or empty");
+        if (string.IsNullOrEmpty(url)) return Result.Failure("URL null or empty");
         try
         {
             //todo check if bookmark already exists
@@ -151,13 +169,18 @@ public class MainWindowViewModel : INotifyPropertyChanged
             BookMarks.Add(name, url);
 
             // todo GetWebsiteIco.GetIcon(name, url);
-            
+
             Descriptions.Add(name, description);
         }
         catch (Exception e)
         {
             Logger.Error(e, "Failed to add a new bookmark");
             return Result.Failure("Failed to add new bookmark.");
+        }
+        finally
+        {
+            Name = "";
+            Url = "";
         }
         return Result.Success();
     }
@@ -169,6 +192,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
     public Result AddDescription()
     {
+        DescriptionText = DescriptionTextVisulized;
         try
         {
             if (BookMarks.ContainsKey(SelectedBookmark))
@@ -196,6 +220,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
     public Result DeleteBookMark(string name)
     {
+        if (SelectedBookmark == null) return Result.Failure("No bookmark selected");
         try
         {
             //todo check if bookmark exist
