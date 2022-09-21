@@ -168,7 +168,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
             SavedBookmarks.Add(name);
             BookMarks.Add(name, url);
 
-            // todo GetWebsiteIco.GetIcon(name, url);
+            GetWebsiteIcon.GetIcon(name, url);
 
             Descriptions.Add(name, description);
         }

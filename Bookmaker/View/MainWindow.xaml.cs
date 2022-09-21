@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using Bookmaker.ViewModel;
 
 namespace Bookmaker.View
@@ -15,7 +14,6 @@ namespace Bookmaker.View
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly MainWindowViewModel? _viewModel;
-        private bool desx = false;
         public MainWindow()
         {
             Logger.Info("Start App");
@@ -51,12 +49,12 @@ namespace Bookmaker.View
         
         private void Description_OnLostFocus(object sender, RoutedEventArgs e)
         {
-            desx = false;
+            
         }
 
         private void Description_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            desx = true;
+            
         }
 
         private void Bookmarks_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -72,14 +70,13 @@ namespace Bookmaker.View
 
         private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            return;
-            if (NoViewModelAttached()) return;
-            Debug.Assert(_viewModel != null, "View model shouldn't be null there!");
+            //if (NoViewModelAttached()) return;
+            //Debug.Assert(_viewModel != null, "View model shouldn't be null there!");
 
-            // TODO HERE CODE TO MAKE THE ADDING LOGIC VISIBLE
-            _viewModel.AddNewVisibility = Visibility.Visible;
-            Bookmarks.SelectedItem = null;
-            //https://stackoverflow.com/questions/23133527/wpf-listbox-remove-selection-by-clicking-on-blank-space
+            //// TODO HERE CODE TO MAKE THE ADDING LOGIC VISIBLE
+            //_viewModel.AddNewVisibility = Visibility.Visible;
+            //Bookmarks.SelectedItem = null;
+            ////https://stackoverflow.com/questions/23133527/wpf-listbox-remove-selection-by-clicking-on-blank-space
         }
 
         private void DeleteBookmark_OnClick(object sender, RoutedEventArgs e)
