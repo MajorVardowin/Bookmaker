@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using NLog.Fluent;
 
 namespace Bookmaker.Logic;
 
@@ -33,7 +32,7 @@ public static class GetWebsiteIcon
         }
         catch (Exception e)
         {
-            Logger.Error(e, "Error while downloading icon");
+            Logger.Error(e, $"Error while downloading icon ${name} from ${url}");
         }
         finally
         {
