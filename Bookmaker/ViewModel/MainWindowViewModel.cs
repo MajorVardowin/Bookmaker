@@ -4,14 +4,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Bookmaker.Annotations;
 using Bookmaker.Logic;
 using CSharpFunctionalExtensions;
-using static System.Net.WebRequestMethods;
 
 namespace Bookmaker.ViewModel;
 
@@ -148,8 +146,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
     private void UpdateDescription()
     {
-        GetDescription(SelectedBookmark);
-
+        Result result = GetDescription(SelectedBookmark);
+        if (result.IsFailure)
+        {
+            Logger.Error("Failed to receive description");
+        }
         DescriptionTextVisulized = DescriptionText;
     }
 
@@ -220,6 +221,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
     public Result DeleteBookMark(string name)
     {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (SelectedBookmark == null) return Result.Failure("No bookmark selected");
         try
         {
@@ -260,7 +262,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
     public void DoubleClick(ListBox listBoxObj, MouseButtonEventArgs mouseButtonEventArgs1)
     {
-        string url = "";
+        string url;
         try
         {
             string item = listBoxObj.SelectedItem.ToString() ?? throw new InvalidOperationException();
